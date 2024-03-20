@@ -23,6 +23,9 @@ public class NexignApplication implements CommandLineRunner, ApplicationContextA
     @Override
     public void run(String... args) {
         try {
+            Commutator commutator = context.getBean(Commutator.class);
+            commutator.commit();
+
             UdrService udrService = context.getBean(UdrService.class);
             udrService.generateReport();
         } catch (FileReadException | FileWriteException e) {

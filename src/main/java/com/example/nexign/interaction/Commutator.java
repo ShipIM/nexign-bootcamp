@@ -32,7 +32,6 @@ public class Commutator implements Publisher<Transaction> {
         subscribers.forEach(subscriber -> subscriber.receive(message));
     }
 
-    @PostConstruct
     public void commit() {
         source.provide().forEach(this::notifySubscribers);
     }
