@@ -16,6 +16,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 @Configuration
@@ -26,6 +27,11 @@ public class ApplicationConfig {
     private final GeneratorProperties generatorProperties;
 
     private final static Integer FEBRUARY = 28;
+
+    @Bean
+    public Consumer<String> printer() {
+        return System.out::println;
+    }
 
     @Bean
     public Source<Transaction> listTransactionSource(List<Transaction> transactions) {

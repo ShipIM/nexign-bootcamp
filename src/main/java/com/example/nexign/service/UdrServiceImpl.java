@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class UdrServiceImpl implements UdrService {
     private final CdrService cdrService;
     private final ObjectReader<Transaction> objectReader;
     private final ObjectWriter<CustomerSummary> objectWriter;
+    private final Consumer<String> printer;
     private final GeneratorProperties generatorProperties;
     private final TimeUtils timeUtils;
 
@@ -60,7 +62,7 @@ public class UdrServiceImpl implements UdrService {
 
         for (int i = generatorProperties.getYearStart(); i <= generatorProperties.getYearEnd(); i++) {
             var filename = cdrService.generateReport(i, month);
-            transactionMap.put(String.format(MAP_PATTERN, month, i), objectReader.read(filename));
+            transactionMap.put(String.format(MAP_PATTERN, i, month), objectReader.read(filename));
         }
 
         var personalSummaryMap = processTransactions(transactionMap, msisdn);
@@ -87,7 +89,7 @@ public class UdrServiceImpl implements UdrService {
         for (int i = generatorProperties.getYearStart(); i <= generatorProperties.getYearEnd(); i++) {
             for (int j = generatorProperties.getMonthStart(); j <= generatorProperties.getMonthEnd(); j++) {
                 var filename = cdrService.generateReport(i, j);
-                transactionsMap.put(String.format(MAP_PATTERN, j, i), objectReader.read(filename));
+                transactionsMap.put(String.format(MAP_PATTERN, i, j), objectReader.read(filename));
             }
         }
 
@@ -123,13 +125,15 @@ public class UdrServiceImpl implements UdrService {
             return;
         }
 
-        System.out.println("+-----------+--------------+--------------+");
-        System.out.println("|   MSISDN  |   Incoming   |  Outcoming   |");
-        System.out.println("+-----------+--------------+--------------+");
-        totalSummaryMap.values().forEach(value -> System.out.printf("| %-10d| %-13s| %-13s|%n",
+        StringBuilder output = new StringBuilder("+-----------+--------------+--------------+\n");
+        output.append("|   MSISDN  |   Incoming   |  Outcoming   |\n");
+        output.append("+-----------+--------------+--------------+\n");
+        totalSummaryMap.values().forEach(value -> output.append(String.format("| %-10d| %-13s| %-13s|\n",
                 value.getMsisdn(), timeUtils.formatSeconds(value.getIncoming()),
-                timeUtils.formatSeconds(value.getOutcoming())));
-        System.out.println("+-----------+--------------+--------------+");
+                timeUtils.formatSeconds(value.getOutcoming()))));
+        output.append("+-----------+--------------+--------------+\n");
+
+        printer.accept(output.toString());
     }
 
     private void logPersonal(Map<String, CustomerSummary> personalSummaryMap) {
@@ -137,13 +141,15 @@ public class UdrServiceImpl implements UdrService {
             return;
         }
 
-        System.out.println("+-----------+--------------+--------------+");
-        System.out.println("|  Period   |   Incoming   |  Outcoming   |");
-        System.out.println("+-----------+--------------+--------------+");
-        personalSummaryMap.forEach((key, value) -> System.out.printf("| %-10s| %-13s| %-13s|%n",
+        StringBuilder output = new StringBuilder("+-----------+--------------+--------------+\n");
+        output.append("|  Period   |   Incoming   |  Outcoming   |\n");
+        output.append("+-----------+--------------+--------------+\n");
+        personalSummaryMap.forEach((key, value) -> output.append(String.format("| %-10s| %-13s| %-13s|\n",
                 key, timeUtils.formatSeconds(value.getIncoming()),
-                timeUtils.formatSeconds(value.getOutcoming())));
-        System.out.println("+-----------+--------------+--------------+");
+                timeUtils.formatSeconds(value.getOutcoming()))));
+        output.append("+-----------+--------------+--------------+\n");
+
+        printer.accept(output.toString());
     }
 
 }
