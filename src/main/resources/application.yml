@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:nexign
+    driver-class-name: org.h2.Driver
+    username: username
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+  h2:
+    console:
+      enabled: true
+
+generator:
+  transactions: 200
+  customers: 10
+  year-start: 2024
+  year-end: 2024
+  month-start: 1
+  month-end: 12
