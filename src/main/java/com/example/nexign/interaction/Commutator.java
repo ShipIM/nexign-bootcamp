@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * The Commutator class acts as a publisher for transactions, notifying its subscribers of incoming messages.
+ */
 @Component
 @RequiredArgsConstructor
 public class Commutator implements Publisher<Transaction> {
@@ -32,6 +35,9 @@ public class Commutator implements Publisher<Transaction> {
         subscribers.forEach(subscriber -> subscriber.receive(message));
     }
 
+    /**
+     * Retrieves transactions from the source and notifies subscribers.
+     */
     public void commit() {
         source.provide().forEach(this::notifySubscribers);
     }
