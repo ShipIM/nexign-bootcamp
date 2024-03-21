@@ -20,6 +20,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     public Transaction save(Transaction transaction) {
         var number = transaction.getCustomer().getNumber();
+
         if (customerRepository.existsByNumber(number)) {
             transaction.setCustomer(customerRepository.getCustomerByNumber(number));
         } else {

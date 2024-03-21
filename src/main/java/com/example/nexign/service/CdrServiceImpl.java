@@ -33,9 +33,7 @@ public class CdrServiceImpl implements CdrService, Subscriber<Transaction> {
         var formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
         var filename = String.format(PATH, date.format(formatter));
         var transactions = transactionService.getTransactionsByPeriod(
-                timeUtils.getStartOfMonthUnixTime(date),
-                timeUtils.getEndOfMonthUnixTime(date)
-        );
+                timeUtils.getStartOfMonthUnixTime(date), timeUtils.getEndOfMonthUnixTime(date));
 
         return objectWriter.write(filename, transactions.toArray(new Transaction[0]));
     }

@@ -1,8 +1,6 @@
 package com.example.nexign;
 
 import com.example.nexign.api.service.UdrService;
-import com.example.nexign.exception.FileReadException;
-import com.example.nexign.exception.FileWriteException;
 import com.example.nexign.interaction.Commutator;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.CommandLineRunner;
@@ -22,15 +20,11 @@ public class NexignApplication implements CommandLineRunner, ApplicationContextA
 
     @Override
     public void run(String... args) {
-        try {
             Commutator commutator = context.getBean(Commutator.class);
             commutator.commit();
 
             UdrService udrService = context.getBean(UdrService.class);
             udrService.generateReport();
-        } catch (FileReadException | FileWriteException e) {
-            System.out.println(e.getMessage());
-        }
     }
 
     @Override

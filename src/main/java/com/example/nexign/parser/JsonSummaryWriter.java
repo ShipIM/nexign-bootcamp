@@ -36,7 +36,7 @@ public class JsonSummaryWriter implements ObjectWriter<CustomerSummary> {
             }
 
             var mapper = new ObjectMapper();
-            CustomerSummary summary = objects[0];
+            var summary = objects[0];
 
             Files.writeString(path, mapper.writerWithDefaultPrettyPrinter().
                     writeValueAsString(converter.convertTo(summary)));
