@@ -1,6 +1,6 @@
 package com.example.nexign.config;
 
-import com.example.nexign.api.source.Source;
+import com.example.nexign.api.interaction.Source;
 import com.example.nexign.config.property.GeneratorProperties;
 import com.example.nexign.model.entity.Customer;
 import com.example.nexign.model.entity.Transaction;
@@ -24,8 +24,6 @@ public class ApplicationConfig {
 
     private final GeneratorProperties generatorProperties;
 
-    private final static Integer FEBRUARY = 28;
-
     @Bean
     public Consumer<String> printer() {
         return System.out::println;
@@ -46,8 +44,8 @@ public class ApplicationConfig {
         for (int i = 0; i < generatorProperties.getTransactions(); i++) {
             var transaction = new Transaction();
 
-            var start = generateRandomTime(random, generatorProperties.getYearStart(),
-                    generatorProperties.getYearEnd(), generatorProperties.getMonthStart(),
+            var start = generateRandomTime(random, generatorProperties.getYear(),
+                    generatorProperties.getMonthStart(),
                     generatorProperties.getMonthEnd());
             transaction.setStart(start);
             transaction.setEnd(start + random.nextInt(3600) * 1000);
@@ -74,11 +72,10 @@ public class ApplicationConfig {
         return customers;
     }
 
-    private Long generateRandomTime(Random random, Integer startYear, Integer endYear, Integer startMonth,
+    private Long generateRandomTime(Random random, Integer year, Integer startMonth,
                                     Integer endMonth) {
-        var year = startYear + random.nextInt(endYear - startYear + 1);
         var month = startMonth + random.nextInt(endMonth - startMonth + 1);
-        var day = 1 + random.nextInt(FEBRUARY);
+        var day = 1 + random.nextInt(28);
 
         return generateRandomTimestamp(random, year, month, day);
     }

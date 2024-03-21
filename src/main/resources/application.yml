@@ -17,7 +17,6 @@ spring:
 generator:
   transactions: 200
   customers: 10
-  year-start: 2024
-  year-end: 2024
+  year: 2024
   month-start: 1
   month-end: 12

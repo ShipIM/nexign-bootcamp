@@ -1,9 +1,9 @@
-package com.example.nexign.api.source;
+package com.example.nexign.api.interaction;
 
 import java.util.Collection;
 
 /**
- * Interface is responsible for providing a data.
+ * Interface is responsible for loading a data.
  *
  * @param <T> the type of elements in the data source
  */
@@ -14,6 +14,6 @@ public interface Source<T> {
      *
      * @return a collection containing elements from the data source
      */
-    Collection<T> provide();
+    Collection<T> load();
 
 }

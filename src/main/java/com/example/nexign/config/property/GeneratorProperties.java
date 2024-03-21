@@ -13,9 +13,7 @@ public class GeneratorProperties {
 
     private Integer customers;
 
-    private Integer yearStart;
-
-    private Integer yearEnd;
+    private Integer year;
 
     private Integer monthStart;
 

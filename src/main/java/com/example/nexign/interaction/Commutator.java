@@ -2,7 +2,7 @@ package com.example.nexign.interaction;
 
 import com.example.nexign.api.interaction.Publisher;
 import com.example.nexign.api.interaction.Subscriber;
-import com.example.nexign.api.source.Source;
+import com.example.nexign.api.interaction.Source;
 import com.example.nexign.model.entity.Transaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ public class Commutator implements Publisher<Transaction> {
      * Retrieves transactions from the source and notifies subscriber.
      */
     public void commit() {
-        source.provide().forEach(this::notifySubscribers);
+        source.load().forEach(this::notifySubscribers);
     }
 
 }
