@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 /**
- * Interface representing a service responsible for generating CDR (Call Data Record) reports.
+ * Interface representing a service responsible for generating CDR reports.
  */
 public interface CdrService {
 

@@ -1,7 +1,7 @@
 package com.example.nexign.api.service;
 
 /**
- * Interface representing a service responsible for generating UDR (Usage Data Report) reports.
+ * Interface representing a service responsible for generating UDR reports.
  */
 public interface UdrService {
 
@@ -13,7 +13,7 @@ public interface UdrService {
     /**
      * Generates a UDR report for a specific customer identified by their MSISDN.
      *
-     * @param msisdn the MSISDN (Mobile Subscriber Integrated Services Digital Number) of the customer
+     * @param msisdn the MSISDN of the customer
      */
     void generateReport(Integer msisdn);
 
