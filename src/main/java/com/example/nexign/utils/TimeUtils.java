@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 
 /**
- * The TimeUtils class provides various utility methods for handling time-related operations.
+ * This class provides various utility methods for handling time-related operations.
  */
 @Component
 public class TimeUtils {
