@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +21,11 @@ public class JsonSummaryWriter implements ObjectWriter<CustomerSummary> {
     private final Converter<CustomerSummaryPresenter, CustomerSummary> converter;
 
     @Override
-    public String write(List<CustomerSummary> objects, String filename) {
+    public Optional<String> write(String filename, CustomerSummary[] objects) {
+        if (objects.length == 0) {
+            return Optional.empty();
+        }
+
         try {
             var path = Paths.get(filename);
             if (!Files.exists(path.getParent())) {
@@ -33,11 +36,12 @@ public class JsonSummaryWriter implements ObjectWriter<CustomerSummary> {
             }
 
             var mapper = new ObjectMapper();
+            CustomerSummary summary = objects[0];
 
-            Files.writeString(path, mapper.writeValueAsString(objects.stream()
-                    .map(converter::convertTo).collect(Collectors.toList())));
+            Files.writeString(path, mapper.writerWithDefaultPrettyPrinter().
+                    writeValueAsString(converter.convertTo(summary)));
 
-            return filename;
+            return Optional.of(filename);
         } catch (IOException e) {
             throw new FileWriteException("Unable to write JSON to file: " + filename);
         }

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Transactional
-    public List<Transaction> getTransactionsByPeriod(Long start, Long end) {
+    public Collection<Transaction> getTransactionsByPeriod(Long start, Long end) {
         var transactions = transactionRepository.findAllByStartBetween(start, end);
 
         transactionRepository.transferTransactionsBetween(start, end);

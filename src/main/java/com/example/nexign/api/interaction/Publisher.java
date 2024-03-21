@@ -1,7 +1,7 @@
 package com.example.nexign.api.interaction;
 
 /**
- * Interface defines the contract for publishers that manage subscribers and notify them of messages.
+ * Interface defining the contract for publishers that manage subscribers and notify them of messages.
  *
  * @param <T> the type of messages to publish
  */

@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -19,7 +20,11 @@ public class CsvTransactionWriter implements ObjectWriter<Transaction> {
 
     private final Converter<String, Transaction> converter;
 
-    public String write(List<Transaction> transactions, String filename) {
+    public Optional<String> write(String filename, Transaction[] objects) {
+        if (objects.length == 0) {
+            return Optional.empty();
+        }
+
         try {
             var path = Paths.get(filename);
             if (!Files.exists(path.getParent())) {
@@ -29,13 +34,13 @@ public class CsvTransactionWriter implements ObjectWriter<Transaction> {
                 Files.createFile(path);
             }
 
-            var csvContent = transactions.stream()
+            var csvContent = Arrays.stream(objects)
                     .map(transaction -> converter.convertTo(transaction) + "\n")
                     .collect(Collectors.joining());
 
             Files.writeString(path, csvContent);
 
-            return filename;
+            return Optional.of(filename);
         } catch (IOException e) {
             throw new FileWriteException("Unable to write CSV to file: " + filename);
         }

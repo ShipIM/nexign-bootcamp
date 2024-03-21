@@ -1,7 +1,7 @@
 package com.example.nexign.api.converter;
 
 /**
- * Interface defines the contract for converters that convert between two types.
+ * Interface defining the contract for converters that convert between two types.
  *
  * @param <T> the type to convert to
  * @param <E> the type to convert from

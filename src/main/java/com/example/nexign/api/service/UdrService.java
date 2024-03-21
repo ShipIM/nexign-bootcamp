@@ -1,7 +1,7 @@
 package com.example.nexign.api.service;
 
 /**
- * Interface represents a service responsible for generating UDR (Usage Data Report) reports.
+ * Interface representing a service responsible for generating UDR (Usage Data Report) reports.
  */
 public interface UdrService {
 

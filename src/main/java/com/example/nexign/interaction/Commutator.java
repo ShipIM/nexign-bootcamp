@@ -4,14 +4,13 @@ import com.example.nexign.api.interaction.Publisher;
 import com.example.nexign.api.interaction.Subscriber;
 import com.example.nexign.api.source.Source;
 import com.example.nexign.model.entity.Transaction;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
- * The Commutator class acts as a publisher for transactions, notifying its subscribers of incoming messages.
+ * The Commutator class acts as a publisher for transactions, notifying its subscriber (CDR) of incoming calls.
  */
 @Component
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class Commutator implements Publisher<Transaction> {
     }
 
     /**
-     * Retrieves transactions from the source and notifies subscribers.
+     * Retrieves transactions from the source and notifies subscriber.
      */
     public void commit() {
         source.provide().forEach(this::notifySubscribers);

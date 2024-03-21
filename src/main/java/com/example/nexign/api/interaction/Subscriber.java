@@ -1,7 +1,7 @@
 package com.example.nexign.api.interaction;
 
 /**
- * Interface defines the contract for subscribers that receive messages of a specific type.
+ * Interface defining the contract for subscribers that receive messages of a specific type.
  *
  * @param <T> the type of messages to receive
  */

@@ -2,10 +2,10 @@ package com.example.nexign.api.service;
 
 import com.example.nexign.model.entity.Transaction;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
- * Interface defines the contract for transaction-related operations.
+ * Interface defining the contract for transaction-related operations.
  */
 public interface TransactionService {
 
@@ -22,8 +22,8 @@ public interface TransactionService {
      *
      * @param start the lower bound of the period
      * @param end   the upper bound of the period
-     * @return a list of transactions within the specified period
+     * @return a collection of transactions within the specified period
      */
-    List<Transaction> getTransactionsByPeriod(Long start, Long end);
+    Collection<Transaction> getTransactionsByPeriod(Long start, Long end);
 
 }

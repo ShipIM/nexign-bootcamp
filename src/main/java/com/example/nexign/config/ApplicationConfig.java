@@ -13,9 +13,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
@@ -34,12 +32,12 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public Source<Transaction> listTransactionSource(List<Transaction> transactions) {
+    public Source<Transaction> listTransactionSource(Collection<Transaction> transactions) {
         return () -> transactions;
     }
 
     @Bean
-    public List<Transaction> transactions() {
+    public Collection<Transaction> transactions() {
         var transactions = new ArrayList<Transaction>();
         var random = new Random();
 

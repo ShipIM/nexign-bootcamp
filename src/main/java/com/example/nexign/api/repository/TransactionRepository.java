@@ -19,7 +19,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
      *
      * @param start the lower bound of the range
      * @param end   the upper bound of the range
-     * @return a list of transactions within the specified range
+     * @return a collection of transactions within the specified range
      */
     List<Transaction> findAllByStartBetween(Long start, Long end);
 

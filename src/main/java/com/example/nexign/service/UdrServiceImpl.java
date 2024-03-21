@@ -11,6 +11,7 @@ import com.example.nexign.utils.TimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -42,7 +43,7 @@ public class UdrServiceImpl implements UdrService {
                 summary.setIncoming(summary.getIncoming() + value.getIncoming());
             }
 
-            objectWriter.write(Collections.singletonList(value), String.format(PATH, key, k));
+            objectWriter.write(String.format(PATH, key, k), value);
         }));
 
         logTotal(totalSummaryMap);
@@ -58,11 +59,15 @@ public class UdrServiceImpl implements UdrService {
 
     @Override
     public void generateReport(Integer msisdn, Integer month) {
-        var transactionMap = new HashMap<String, List<Transaction>>();
+        var transactionMap = new HashMap<String, Collection<Transaction>>();
 
         for (int i = generatorProperties.getYearStart(); i <= generatorProperties.getYearEnd(); i++) {
-            var filename = cdrService.generateReport(i, month);
-            transactionMap.put(String.format(MAP_PATTERN, i, month), objectReader.read(filename));
+            var filename = cdrService.generateReport(LocalDate.of(i, month, 1));
+            if (filename.isEmpty()) {
+                continue;
+            }
+
+            transactionMap.put(String.format(MAP_PATTERN, i, month), objectReader.read(filename.get()));
         }
 
         var personalSummaryMap = processTransactions(transactionMap, msisdn);
@@ -70,33 +75,36 @@ public class UdrServiceImpl implements UdrService {
         logPersonal(personalSummaryMap);
     }
 
-    private Map<String, CustomerSummary> processTransactions(Map<String, List<Transaction>> transactionMap,
+    private Map<String, CustomerSummary> processTransactions(Map<String, Collection<Transaction>> transactionMap,
                                                              Integer msisdn) {
         var personalSummaryMap = new HashMap<String, CustomerSummary>();
         transactionMap.forEach((k, v) -> extractSummaryMap(v).entrySet().stream()
                 .filter(entry -> entry.getKey().equals(msisdn))
                 .forEach(entry -> {
                     personalSummaryMap.put(k, entry.getValue());
-                    objectWriter.write(Collections.singletonList(entry.getValue()),
-                            String.format(PATH, entry.getKey(), k));
+                    objectWriter.write(String.format(PATH, entry.getKey(), k), entry.getValue());
                 }));
 
         return personalSummaryMap;
     }
 
-    private Map<String, List<Transaction>> extractTransactionMap() {
-        var transactionsMap = new HashMap<String, List<Transaction>>();
+    private Map<String, Collection<Transaction>> extractTransactionMap() {
+        var transactionsMap = new HashMap<String, Collection<Transaction>>();
         for (int i = generatorProperties.getYearStart(); i <= generatorProperties.getYearEnd(); i++) {
             for (int j = generatorProperties.getMonthStart(); j <= generatorProperties.getMonthEnd(); j++) {
-                var filename = cdrService.generateReport(i, j);
-                transactionsMap.put(String.format(MAP_PATTERN, i, j), objectReader.read(filename));
+                var filename = cdrService.generateReport(LocalDate.of(i, j, 1));
+                if (filename.isEmpty()) {
+                    continue;
+                }
+
+                transactionsMap.put(String.format(MAP_PATTERN, i, j), objectReader.read(filename.get()));
             }
         }
 
         return transactionsMap;
     }
 
-    private Map<Integer, CustomerSummary> extractSummaryMap(List<Transaction> transactions) {
+    private Map<Integer, CustomerSummary> extractSummaryMap(Collection<Transaction> transactions) {
         var summaryMap = new HashMap<Integer, CustomerSummary>();
         transactions.forEach(transaction -> {
             var number = transaction.getCustomer().getNumber();

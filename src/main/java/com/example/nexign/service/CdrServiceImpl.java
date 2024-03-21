@@ -4,10 +4,15 @@ import com.example.nexign.api.interaction.Subscriber;
 import com.example.nexign.api.parser.ObjectWriter;
 import com.example.nexign.api.service.CdrService;
 import com.example.nexign.api.service.TransactionService;
+import com.example.nexign.exception.FileWriteException;
 import com.example.nexign.model.entity.Transaction;
 import com.example.nexign.utils.TimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,21 +22,23 @@ public class CdrServiceImpl implements CdrService, Subscriber<Transaction> {
     private final ObjectWriter<Transaction> objectWriter;
     private final TimeUtils timeUtils;
 
-    private final static String PATH = "cdr/%d_%d.txt";
+    private final static String PATH = "cdr/%s.txt";
+    private final static String DATE_PATTERN = "yyyy_MM";
 
     @Override
     public void receive(Transaction message) {
         transactionService.save(message);
     }
 
-    public String generateReport(Integer year, Integer month) {
-        var filename = String.format(PATH, year, month);
+    public Optional<String> generateReport(LocalDate date) {
+        var formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+        var filename = String.format(PATH, date.format(formatter));
         var transactions = transactionService.getTransactionsByPeriod(
-                timeUtils.getStartOfMonthUnixTime(year, month),
-                timeUtils.getEndOfMonthUnixTime(year, month)
+                timeUtils.getStartOfMonthUnixTime(date),
+                timeUtils.getEndOfMonthUnixTime(date)
         );
 
-        return objectWriter.write(transactions, filename);
+        return objectWriter.write(filename, transactions.toArray(new Transaction[0]));
     }
 
 }

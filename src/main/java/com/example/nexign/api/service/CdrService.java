@@ -1,17 +1,20 @@
 package com.example.nexign.api.service;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 /**
- * Interface represents a service responsible for generating CDR (Call Data Record) reports.
+ * Interface representing a service responsible for generating CDR (Call Data Record) reports.
  */
 public interface CdrService {
 
     /**
-     * Generates a CDR report for the specified year and month.
+     * Generates a CDR report for the specified date.
      *
-     * @param year  the year for which the report is generated
-     * @param month the month for which the report is generated
-     * @return the filename of the generated report
+     * @param date the date for which the report is generated
+     * @return an Optional containing the filename of the generated report,
+     *         or an empty Optional if the report generation fails
      */
-    String generateReport(Integer year, Integer month);
+    Optional<String> generateReport(LocalDate date);
 
 }
