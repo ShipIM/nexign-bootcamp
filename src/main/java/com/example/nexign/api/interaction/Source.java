@@ -3,7 +3,7 @@ package com.example.nexign.api.interaction;
 import java.util.Collection;
 
 /**
- * Interface is responsible for loading a data.
+ * Interface defining the contract for loading a data.
  *
  * @param <T> the type of elements in the data source
  */

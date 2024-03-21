@@ -24,6 +24,7 @@ public class DateTransactionProviderImpl implements DateTransactionProvider {
     @Override
     public Map<LocalDate, Collection<Transaction>> provide() {
         var transactionsMap = new HashMap<LocalDate, Collection<Transaction>>();
+
         for (int i = generatorProperties.getMonthStart(); i <= generatorProperties.getMonthEnd(); i++) {
             var date = LocalDate.of(generatorProperties.getYear(), i, 1);
             var filename = cdrService.generateReport(date);

@@ -65,6 +65,7 @@ public class ApplicationConfig {
 
         IntStream.range(0, number).forEach(i -> {
             var customer = new Customer();
+
             customer.setNumber(100000000 + i);
             customers.add(customer);
         });
@@ -83,6 +84,7 @@ public class ApplicationConfig {
     private Long generateRandomTimestamp(Random random, Integer year, Integer month, Integer day) {
         var minDay = LocalDate.of(year, month, day).toEpochDay();
         var maxDay = LocalDate.of(year, month, Month.of(month).length(Year.isLeap(year))).toEpochDay();
+
         var randomDay = minDay + random.nextLong() % (maxDay - minDay);
 
         return LocalDate.ofEpochDay(randomDay).atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000;
