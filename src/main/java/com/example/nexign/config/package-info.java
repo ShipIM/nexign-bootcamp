@@ -1,4 +1,4 @@
 /**
- * This package contains classes related to application configurations.
+ * This package contains application configurations.
  */
 package com.example.nexign.config;

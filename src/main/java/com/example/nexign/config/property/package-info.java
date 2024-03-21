@@ -1,4 +1,4 @@
 /**
- * This package contains classes related to application properties.
+ * This package contains application properties.
  */
 package com.example.nexign.config.property;
