@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 @Service
@@ -31,21 +34,22 @@ public class UdrServiceImpl implements UdrService {
 
     @Override
     public void generateReport() {
-        var transactionsMap = provider.provide();
+        var transactionMap = provider.provide();
         var totalSummaryMap = new HashMap<Integer, CustomerSummary>();
         var formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
 
-        transactionsMap.forEach((k, v) -> extractSummaryMap(v).forEach((key, value) -> {
-            var summary = totalSummaryMap.get(key);
-            if (Objects.isNull(summary)) {
-                totalSummaryMap.put(key, value);
-            } else {
-                summary.setOutcoming(summary.getOutcoming() + value.getOutcoming());
-                summary.setIncoming(summary.getIncoming() + value.getIncoming());
-            }
+        transactionMap.entrySet().stream().sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> extractSummaryMap(entry.getValue()).forEach((key, value) -> {
+                    var summary = totalSummaryMap.get(key);
+                    if (Objects.isNull(summary)) {
+                        totalSummaryMap.put(key, value);
+                    } else {
+                        summary.setOutcoming(summary.getOutcoming() + value.getOutcoming());
+                        summary.setIncoming(summary.getIncoming() + value.getIncoming());
+                    }
 
-            objectWriter.write(String.format(PATH, key, k.format(formatter)), value);
-        }));
+                    objectWriter.write(String.format(PATH, key, entry.getKey().format(formatter)), value);
+                }));
 
         logTotal(totalSummaryMap);
     }
@@ -72,19 +76,22 @@ public class UdrServiceImpl implements UdrService {
                                                              Integer msisdn) {
         var personalSummaryMap = new HashMap<String, CustomerSummary>();
         var formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
-        transactionMap.forEach((k, v) -> extractSummaryMap(v).entrySet().stream()
-                .filter(entry -> entry.getKey().equals(msisdn))
-                .forEach(entry -> {
-                    var month = k.format(formatter);
-                    personalSummaryMap.put(month, entry.getValue());
-                    objectWriter.write(String.format(PATH, entry.getKey(), month), entry.getValue());
-                }));
+
+        transactionMap.entrySet().stream().sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> extractSummaryMap(entry.getValue()).entrySet().stream()
+                        .filter(e -> e.getKey().equals(msisdn))
+                        .forEach(e -> {
+                            var month = entry.getKey().format(formatter);
+                            personalSummaryMap.put(month, e.getValue());
+                            objectWriter.write(String.format(PATH, e.getKey(), month), e.getValue());
+                        }));
 
         return personalSummaryMap;
     }
 
     private Map<Integer, CustomerSummary> extractSummaryMap(Collection<Transaction> transactions) {
         var summaryMap = new HashMap<Integer, CustomerSummary>();
+
         transactions.forEach(transaction -> {
             var number = transaction.getCustomer().getNumber();
             var summary = summaryMap.containsKey(number) ?

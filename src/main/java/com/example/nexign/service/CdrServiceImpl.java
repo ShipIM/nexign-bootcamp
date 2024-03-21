@@ -4,7 +4,6 @@ import com.example.nexign.api.interaction.Subscriber;
 import com.example.nexign.api.parser.ObjectWriter;
 import com.example.nexign.api.service.CdrService;
 import com.example.nexign.api.service.TransactionService;
-import com.example.nexign.exception.FileWriteException;
 import com.example.nexign.model.entity.Transaction;
 import com.example.nexign.utils.TimeUtils;
 import lombok.RequiredArgsConstructor;
