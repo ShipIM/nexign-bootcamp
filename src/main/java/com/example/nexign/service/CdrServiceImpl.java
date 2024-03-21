@@ -23,7 +23,7 @@ public class CdrServiceImpl implements CdrService, Subscriber<Transaction> {
     private final TimeUtils timeUtils;
 
     private final static String PATH = "cdr/%s.txt";
-    private final static String DATE_PATTERN = "yyyy_MM";
+    private final static String DATE_PATTERN = "MM";
 
     @Override
     public void receive(Transaction message) {

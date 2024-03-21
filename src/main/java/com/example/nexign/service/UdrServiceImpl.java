@@ -33,6 +33,7 @@ public class UdrServiceImpl implements UdrService {
     public void generateReport() {
         var transactionsMap = provider.provide();
         var totalSummaryMap = new HashMap<Integer, CustomerSummary>();
+        var formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
 
         transactionsMap.forEach((k, v) -> extractSummaryMap(v).forEach((key, value) -> {
             var summary = totalSummaryMap.get(key);
@@ -43,7 +44,7 @@ public class UdrServiceImpl implements UdrService {
                 summary.setIncoming(summary.getIncoming() + value.getIncoming());
             }
 
-            objectWriter.write(String.format(PATH, key, k), value);
+            objectWriter.write(String.format(PATH, key, k.format(formatter)), value);
         }));
 
         logTotal(totalSummaryMap);
@@ -74,8 +75,9 @@ public class UdrServiceImpl implements UdrService {
         transactionMap.forEach((k, v) -> extractSummaryMap(v).entrySet().stream()
                 .filter(entry -> entry.getKey().equals(msisdn))
                 .forEach(entry -> {
-                    personalSummaryMap.put(k.format(formatter), entry.getValue());
-                    objectWriter.write(String.format(PATH, entry.getKey(), k), entry.getValue());
+                    var month = k.format(formatter);
+                    personalSummaryMap.put(month, entry.getValue());
+                    objectWriter.write(String.format(PATH, entry.getKey(), month), entry.getValue());
                 }));
 
         return personalSummaryMap;
