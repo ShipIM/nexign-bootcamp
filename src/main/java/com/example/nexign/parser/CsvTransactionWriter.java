@@ -20,7 +20,7 @@ public class CsvTransactionWriter implements ObjectWriter<Transaction> {
 
     private final Converter<String, Transaction> converter;
 
-    public Optional<String> write(String filename, Transaction[] objects) {
+    public Optional<String> write(String filename, Transaction... objects) {
         if (objects.length == 0) {
             return Optional.empty();
         }

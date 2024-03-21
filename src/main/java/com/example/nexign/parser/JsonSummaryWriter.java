@@ -21,7 +21,7 @@ public class JsonSummaryWriter implements ObjectWriter<CustomerSummary> {
     private final Converter<CustomerSummaryPresenter, CustomerSummary> converter;
 
     @Override
-    public Optional<String> write(String filename, CustomerSummary[] objects) {
+    public Optional<String> write(String filename, CustomerSummary... objects) {
         if (objects.length == 0) {
             return Optional.empty();
         }
