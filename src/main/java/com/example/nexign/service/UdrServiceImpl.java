@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Service
@@ -122,9 +119,11 @@ public class UdrServiceImpl implements UdrService {
         StringBuilder output = new StringBuilder("+-----------+--------------+--------------+\n");
         output.append("|   MSISDN  |   Incoming   |  Outcoming   |\n");
         output.append("+-----------+--------------+--------------+\n");
-        totalSummaryMap.values().forEach(value -> output.append(String.format("| %-10d| %-13s| %-13s|\n",
-                value.getMsisdn(), timeUtils.formatSeconds(value.getIncoming()),
-                timeUtils.formatSeconds(value.getOutcoming()))));
+        totalSummaryMap.values().stream()
+                .sorted(Comparator.comparingInt(CustomerSummary::getMsisdn))
+                .forEach(value -> output.append(String.format("| %-10d| %-13s| %-13s|\n",
+                        value.getMsisdn(), timeUtils.formatSeconds(value.getIncoming()),
+                        timeUtils.formatSeconds(value.getOutcoming()))));
         output.append("+-----------+--------------+--------------+\n");
 
         printer.accept(output.toString());
@@ -138,9 +137,11 @@ public class UdrServiceImpl implements UdrService {
         StringBuilder output = new StringBuilder("+-----------+--------------+--------------+\n");
         output.append("|  Period   |   Incoming   |  Outcoming   |\n");
         output.append("+-----------+--------------+--------------+\n");
-        personalSummaryMap.forEach((key, value) -> output.append(String.format("| %-10s| %-13s| %-13s|\n",
-                key, timeUtils.formatSeconds(value.getIncoming()),
-                timeUtils.formatSeconds(value.getOutcoming()))));
+        personalSummaryMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> output.append(String.format("| %-10s| %-13s| %-13s|\n",
+                        entry.getKey(), timeUtils.formatSeconds(entry.getValue().getIncoming()),
+                        timeUtils.formatSeconds(entry.getValue().getOutcoming()))));
         output.append("+-----------+--------------+--------------+\n");
 
         printer.accept(output.toString());

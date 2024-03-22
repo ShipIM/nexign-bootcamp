@@ -1,10 +1,7 @@
 package com.example.nexign.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "listed_transaction")
@@ -12,6 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "id")
 public class ListedTransaction {
 
     @Id
@@ -26,8 +24,7 @@ public class ListedTransaction {
 
     private Short type;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Customer customer;
 
 }

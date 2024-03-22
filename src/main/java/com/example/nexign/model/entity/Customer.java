@@ -1,10 +1,7 @@
 package com.example.nexign.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "id")
 public class Customer {
 
     @Id
@@ -22,8 +20,10 @@ public class Customer {
 
     private Integer number;
 
-    @Transient
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Transaction> messages;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<ListedTransaction> listedTransactions;
 
 }

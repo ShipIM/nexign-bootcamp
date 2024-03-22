@@ -1,8 +1,8 @@
 package com.example.nexign.service;
 
+import com.example.nexign.api.repository.CustomerRepository;
 import com.example.nexign.api.service.TransactionService;
 import com.example.nexign.model.entity.Transaction;
-import com.example.nexign.api.repository.CustomerRepository;
 import com.example.nexign.api.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,13 +19,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Transactional
     public Transaction save(Transaction transaction) {
-        var number = transaction.getCustomer().getNumber();
-
-        if (customerRepository.existsByNumber(number)) {
-            transaction.setCustomer(customerRepository.getCustomerByNumber(number));
-        } else {
-            transaction.setCustomer(customerRepository.save(transaction.getCustomer()));
-        }
+        customerRepository.findByNumber(transaction.getCustomer().getNumber())
+                .ifPresent(transaction::setCustomer);
 
         return transactionRepository.save(transaction);
     }
