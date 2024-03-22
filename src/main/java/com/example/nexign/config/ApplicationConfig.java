@@ -48,7 +48,7 @@ public class ApplicationConfig {
                     generatorProperties.getMonthStart(),
                     generatorProperties.getMonthEnd());
             transaction.setStart(start);
-            transaction.setEnd(start + random.nextInt(3600) * 1000);
+            transaction.setEnd(start + random.nextInt(3600));
             transaction.setType((short) (1 + random.nextInt(2)));
 
             var customer = customers.get(random.nextInt(customers.size()));
@@ -87,7 +87,7 @@ public class ApplicationConfig {
 
         var randomDay = minDay + random.nextLong() % (maxDay - minDay);
 
-        return LocalDate.ofEpochDay(randomDay).atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000;
+        return LocalDate.ofEpochDay(randomDay).atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
     }
 
 }

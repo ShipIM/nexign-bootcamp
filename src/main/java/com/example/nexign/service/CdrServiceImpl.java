@@ -22,7 +22,7 @@ public class CdrServiceImpl implements CdrService, Subscriber<Transaction> {
     private final TimeUtils timeUtils;
 
     private final static String PATH = "cdr/%s.txt";
-    private final static String DATE_PATTERN = "MM";
+    public final static String DATE_PATTERN = "MM";
 
     @Override
     public void receive(Transaction message) {
@@ -35,7 +35,7 @@ public class CdrServiceImpl implements CdrService, Subscriber<Transaction> {
         var transactions = transactionService.getTransactionsByPeriod(
                 timeUtils.getStartOfMonthUnixTime(date), timeUtils.getEndOfMonthUnixTime(date));
 
-        return objectWriter.write(filename, transactions.toArray(new Transaction[0]));
+        return objectWriter.write(filename, transactions.toArray(Transaction[]::new));
     }
 
 }

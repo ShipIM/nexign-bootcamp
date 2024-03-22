@@ -21,7 +21,8 @@ public class TimeUtils {
      * @return the Unix time at the start of the specified date
      */
     public Long getStartOfMonthUnixTime(LocalDate date) {
-        return date.atStartOfDay().toInstant(OFFSET).toEpochMilli();
+        return date.atStartOfDay()
+                .toInstant(OFFSET).toEpochMilli() / 1000;
     }
 
     /**
@@ -31,7 +32,9 @@ public class TimeUtils {
      * @return the Unix time at the end of the specified date
      */
     public Long getEndOfMonthUnixTime(LocalDate date) {
-        return date.plusMonths(1).atStartOfDay().minusSeconds(1).toInstant(ZoneOffset.UTC).toEpochMilli();
+        return date.plusMonths(1)
+                .atStartOfDay().minusSeconds(1)
+                .toInstant(ZoneOffset.UTC).toEpochMilli() / 1000;
     }
 
     /**
